@@ -1,0 +1,95 @@
+################################################################################
+#                                                                              #
+#        languages.conf -- WebMapReduce language support configuration         #
+#                                                                              #
+################################################################################
+#
+# File Format: INI-like
+# - Directives in "key=value" format, outside whitespace ignored
+# - Directives grouped by [group] headings
+# - Comments begin with "#" or ";"
+#
+################################################################################
+#
+# This file specifies which source code languages should be supported by
+# WebMapReduce. Each language is described by a group of directives as follows:
+#
+# [<lang-name>]
+# interpreter = <interpreter-bin>
+# compiler = <compiler-bin>
+# extension = <source-ext>
+# library   = <library-path>
+#
+# Where:
+# - <lang-name> is the name of the language (passed to the servlet as the
+#   "sourceType" request variable)
+# - <interpreter-bin> is the name of the binary (plus any arguments) used to
+#   interpret source code (if applicable)
+# - <compiler-bin> is the name of the binary (plus any arguments) used to
+#   compile source code (if applicable)
+# - <source-ext> is the extension which will be appended to the script
+# - <library-path> is the path to a local directory containing library code
+#   which will be included with the mapper or reducer executable
+#
+# Notes:
+# - <interpreter-bin> must be an absolute path, since it will be used in a
+#   "shebang" line in a script.
+# - <interpreter-bin> must be be present on ALL Hadoop nodes, unless it is
+#   explicitly included in the job JAR by Streaming via the "-files" argument
+#   and specified relative to the job working directory.
+# - If <library-path> is relative, it is interpreted as relative to the language
+#   support directory (the directory that contains this configuration file)
+# - The "compiler" directive can be replaced by two separate directives,
+#   "compiler-mapper" and "compiler-reducer", each used as expected.
+#
+# TODO: Describe library directory format
+#
+################################################################################
+
+[cpp]
+compiler = make -f ${wmr:dest.dir}/Makefile MAPRED_SRC=${wmr:src.file} MAPRED_DEST_DIR=${wmr:dest.dir} MAPRED_DEST_FILE=${wmr:dest.file}
+library = cpp
+extension = cpp
+
+[c]
+compiler-mapper  = gcc -o ${wmr:dest.file} ${wmr:src.file} ${wmr:dest.dir}/wmr_mapper.c  ${wmr:dest.dir}/wmr_common.c ${wmr:dest.dir}/wmr.c -I${wmr:dest.dir}
+compiler-reducer = gcc -o ${wmr:dest.file} ${wmr:src.file} ${wmr:dest.dir}/wmr_reducer.c ${wmr:dest.dir}/wmr_common.c ${wmr:dest.dir}/wmr.c -I${wmr:dest.dir}
+library = c
+extension = c
+
+[scheme-i]
+interpreter = /usr/bin/mzscheme -f
+library = scheme-i
+extension = scm
+
+[scheme-f]
+interpreter = /usr/bin/mzscheme -f
+library = scheme-f
+extension = scm
+
+[perl]
+interpreter = /usr/bin/perl
+library = perl
+extension = pl
+
+[python2]
+interpreter = /usr/bin/python2
+library = python2
+extension = py
+
+[python3]
+interpreter = /usr/bin/python3
+library = python3
+extension = py
+
+[java]
+compiler-mapper = make -f ${wmr:dest.dir}/Makefile TRANSFORM=Mapper SRC_DIR=${wmr:src.dir} DEST_DIR=${wmr:dest.dir} SRC_FILE=${wmr:src.file} DEST_FILE=${wmr:dest.file}
+compiler-reducer = make -f ${wmr:dest.dir}/Makefile TRANSFORM=Reducer SRC_DIR=${wmr:src.dir} DEST_DIR=${wmr:dest.dir} SRC_FILE=${wmr:src.file} DEST_FILE=${wmr:dest.file}
+library = java
+extension = java
+
+[csharp]
+compiler-mapper = make -f ${wmr:dest.dir}/Makefile ASSEM_FILE=job-mapper.exe SRC_DIR=${wmr:src.dir} SRC_FILE=${wmr:src.file} DEST_DIR=${wmr:dest.dir} DEST_FILE=${wmr:dest.file}
+compiler-reducer = make -f ${wmr:dest.dir}/Makefile ASSEM_FILE=job-reducer.exe SRC_DIR=${wmr:src.dir} SRC_FILE=${wmr:src.file} DEST_DIR=${wmr:dest.dir} DEST_FILE=${wmr:dest.file}
+library = csharp
+extension = cs

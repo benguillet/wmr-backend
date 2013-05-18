@@ -1,0 +1,15 @@
+# Each entry in this properties file is an account with the format:
+#
+#  username: password[,role1[,role2...]]
+#
+# Roles are ignored for the purposes of WMRServer--any authenticated user
+# listed in this file is considered valid.
+#
+# Be aware that some characters in passwords (such as "!") may need to be
+# escaped with a backslash. Also, passwords beginning with "OBF:", "CRYPT:",
+# and "MD5:" have special meaning, as described in the documentation for the
+# Jetty webserver.
+
+# The following line adds an account named "wmr" with the password
+# "Esd5juWPqGUQ" with no roles:
+#wmr: Esd5juWPqGUQ

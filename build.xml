@@ -1,0 +1,158 @@
+<project name="WMRServer" default="compile" basedir=".">
+
+<!-- ===================== Property Definitions =========================== -->
+
+  <property file="build.properties"/>
+  <property file="${user.home}/build.properties"/>
+  
+<!-- Define the following properties in a build.properties file: -->
+<!--
+  hadoop.home      Path to the Hadoop installation that includes the "lib" dir
+  servlet-api.jar  Path to the Servlet API JAR if it is not anywhere else on the
+                   classpath. Since Hadoop includes it, this should not be
+                   necessary unless it is a very old version of Hadoop
+-->
+
+<!-- ==================== Project Identifiers ============================= -->
+
+  <property name="app.name"      value="WMR-backend"/>
+  <property name="app.version"   value="2.0"/>
+  <property name="app.name.full" value="${app.name}-${app.version}"/>
+
+<!-- ==================== File and Directory Names ======================== -->
+	
+  <property name="build.dir"     value="${basedir}/build"/>
+  <property name="dist.dir"      value="${basedir}/dist"/>
+  <property name="docs.dir"      value="${basedir}/docs"/>
+  <property name="src.dir"       value="${basedir}/src"/>
+  <property name="bin.dir"       value="${basedir}/bin"/>
+  <property name="web.dir"       value="${basedir}/web"/>
+  <property name="lib.dir"       value="${basedir}/lib"/>
+  <property name="db.dir"        value="${basedir}/db"/>
+  <property name="conf.dir"      value="${basedir}/conf"/>
+  <property name="lang.dir"      value="${basedir}/lang-support"/>
+
+<!-- ==================== External Dependencies =========================== -->
+  
+  <property name="hadoop.home"     value="/opt/hadoop"/>
+  <property name="servlet-api.jar" value=""/>
+
+<!-- ==================== Compilation Classpath =========================== -->
+
+  <path id="compile.classpath">
+
+    <pathelement location="${lib.dir}"/>
+    <fileset dir="${lib.dir}">
+      <include name="*.jar"/>
+    </fileset>
+    
+    <pathelement location="${hadoop.home}/lib"/>
+    <fileset dir="${hadoop.home}">
+      <include name="hadoop-*.jar"/>
+      <include name="lib/**/*.jar"/>
+    </fileset>
+
+    <pathelement location="${servlet-api.jar}"/>
+
+  </path>
+
+<!--  ==================== Compilation Control Options ==================== -->
+
+  <property name="compile.debug"       value="true"/>
+  <property name="compile.deprecation" value="false"/>
+  <property name="compile.optimize"    value="true"/>
+
+<!-- ==================== All Target ====================================== -->
+
+  <target name="all" depends="clean,compile"
+   description="Clean build and dist directories, then compile"/>
+
+<!-- ==================== Clean Target ==================================== -->
+
+  <target name="clean"
+   description="Delete old build and dist directories">
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+
+<!-- ==================== Compile Target ================================== -->
+
+  <target name="compile" depends="prepare"
+   description="Compile Java sources">
+
+    <mkdir    dir="${build.dir}"/>
+    <javac srcdir="${src.dir}"
+          destdir="${build.dir}"
+            debug="${compile.debug}"
+      deprecation="${compile.deprecation}"
+         optimize="${compile.optimize}">
+        <classpath refid="compile.classpath"/>
+    </javac>
+
+    <copy  todir="${build.dir}">
+      <fileset dir="${src.dir}" excludes="**/*.java"/>
+    </copy>
+		
+    <jar destfile="${basedir}/${app.name.full}.jar" basedir="${build.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="edu.stolaf.cs.wmrserver.ThriftServer"/>
+      </manifest>
+    </jar>
+  </target>
+
+<!-- ==================== Dist Target ===================================== -->
+
+  <target name="dist" depends="compile,javadoc"
+   description="Create binary distribution">
+
+    <mkdir dir="${dist.dir}"/>
+		
+    <tar destfile="${dist.dir}/${app.name.full}.tar.gz"
+		     compression="gzip">
+      <tarfileset prefix="${app.name.full}" dir="${basedir}">
+        <exclude name="build/"/>
+        <exclude name="bin/"/>
+        <exclude name="conf/wmr-site.xml"/>
+        <exclude name="conf/accounts.properties"/>
+        <exclude name="dist/"/>
+      </tarfileset>
+      <!-- Executables -->
+      <tarfileset prefix="${app.name.full}" dir="${basedir}" filemode="755">
+        <include name="bin/"/>
+      </tarfileset>
+      <!-- Protected Files (if present) -->
+      <tarfileset prefix="${app.name.full}" dir="${basedir}" filemode="600">
+        <include name="conf/wmr-site.xml"/>
+        <include name="conf/accounts.properties"/>
+      </tarfileset>
+      <!-- Source -->
+      <tarfileset prefix="${app.name.full}" dir="${basedir}">
+        <include name="${src.dir}"/>
+      </tarfileset>
+    </tar>
+
+  </target>
+
+<!-- ==================== Javadoc Target ================================== -->
+
+  <target name="javadoc" depends="compile"
+   description="Create Javadoc API documentation">
+
+    <mkdir dir="${basedir}/docs/api"/>
+    <javadoc destdir="${basedir}/docs/api"
+        packagenames="*">
+      <fileset dir="${src.dir}" defaultexcludes="yes"/>
+      <classpath refid="compile.classpath"/>
+    </javadoc>
+
+  </target>
+
+<!-- ==================== Prepare Target ================================== -->
+
+  <target name="prepare">
+
+    <mkdir  dir="${build.dir}"/>
+
+  </target>
+
+</project>

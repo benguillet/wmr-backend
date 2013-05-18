@@ -1,0 +1,5 @@
+edu.stolaf.cs.wmrserver
+edu.stolaf.cs.wmrserver.db
+edu.stolaf.cs.wmrserver.streaming
+edu.stolaf.cs.wmrserver.testjob
+edu.stolaf.cs.wmrserver.thrift

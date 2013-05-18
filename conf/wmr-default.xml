@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Do not modify this file directly.  Instead, copy entries that you -->
+<!-- wish to modify from this file into wmr-site.xml and change them   -->
+<!-- there.  If wmr-site.xml does not already exist, create it.        -->
+
+<configuration>
+
+<!-- ======================= Web Service Configuration ==================== -->
+
+<property>
+	<name>wmr.dfs.home</name>
+	<value></value>
+	<description>
+	The directory on the DFS which will contain all WebMapReduce job input and
+	output files. If unset, defaults to the WMR user's home directory on the DFS.
+	</description>
+</property>
+
+<property>
+	<name>wmr.temp.dir</name>
+	<value>${java.io.tmpdir}</value>
+	<description>
+	The local directory which will contain all WebMapReduce files such as mapper
+	and reducer scripts, test job output, etc.
+	</description>
+</property>
+
+<property>
+	<name>wmr.lang.support.dir</name>
+	<value>${wmr.home.dir}/lang-support</value>
+	<description>
+	The directory containing language support files, including the configuration
+	file "languages.conf".
+	</description>
+</property>
+
+<property>
+	<name>wmr.input.containment.enforce</name>
+	<value>false</value>
+	<description>
+	A boolean flag indicating whether job input files on the DFS must be contained
+	within the directory specified by wmr.dfs.home, or if all paths are allowed.
+	</description>
+</property>
+
+<property>
+	<name>wmr.status.output.pagesize</name>
+	<value>524288<!-- 512 K --></value>
+	<description>
+	The size, in bytes, of a page of output to return when checking a completed
+	job's status.
+	</description>
+</property>
+
+<!-- Test Job Configuration -->
+
+<property>
+	<name>wmr.tests.allow</name>
+	<value>false</value>
+	<description>
+	A boolean flag indicating whether test jobs are allowed to run. Note that this
+	can be a SERIOUS SECURITY RISK if jobs are run under the same account as the
+	server. DO NOT set this property to true unless you provide some way to run
+	the test jobs as as different user through the tests.su.cmd property.
+	</description>
+</property>
+
+<property>
+	<name>wmr.tests.su.cmd</name>
+	<value>/usr/bin/sudo -Enu nobody ${cmd}</value>
+	<description>
+	A command to use to run test jobs as another unprivileged user. The special
+	variable "${cmd}" will be replaced by the test job command.
+	
+	DO NOT set the tests.allow property to true without setting this property AND
+	performing any system setup necessary to make it work (see the WebMapReduce
+	administration guide for details). If test jobs are run under the same account
+	as the server, they can access and expose the server's private keys,
+	passwords, etc.
+	</description>
+</property>
+
+<property>
+	<name>wmr.tests.input.cap</name>
+	<value>1024</value>
+	<description>
+	The maximum size of input for test jobs, in bytes. Files will be cut off after
+	this limit is exceeded.
+	</description>
+</property>
+
+<!-- =========================== Quota Configuration ======================= -->
+
+<property>
+	<name>wmr.quota.enable</name>
+	<value>true</value>
+	<description>
+	A boolean flag indicating whether job quotas are enabled.
+	</description>
+</property>
+
+<property>
+	<name>wmr.quota.user.enable</name>
+	<value>true</value>
+	<description>
+	A boolean flag indicating whether job quotas are enabled on a per-user basis.
+	If wmr.quotas.enable is set to false, this flag has no effect.
+	</description>
+</property>
+
+<property>
+	<name>wmr.quota.total.attempts</name>
+	<value>60</value>
+	<description>
+	The total number of job submission attempts allowed within the timeframe of
+	wmr.quota.total.duration. If this quota is exceeded all job submissions will
+	be temporarily disabled. This property setting is currently disregarded.
+	</description>
+</property>
+
+<property>
+	<name>wmr.quota.total.duration</name>
+	<value>10</value>
+	<description>
+	The timeframe throughout which the limit set by wmr.quota.total.duration is
+	measured. This value is an integral number of minutes. This property setting 
+	is currently disregarded.
+	</description>
+</property>
+
+<property>
+	<name>wmr.quota.user.attempts</name>
+	<value>20</value>
+	<description>
+	The total number of job submission attempts allowed per user within the timeframe of
+	wmr.quota.user.duration. If this quota is exceeded all job submissions will
+	be temporarily disabled for the user in question.
+	</description>
+</property>
+
+<property>
+	<name>wmr.quota.user.duration</name>
+	<value>10</value>
+	<description>
+	The timeframe throughout which the limit set by wmr.quota.user.duration is
+	measured. This value is an integral number of minutes.
+	</description>
+</property>
+
+<!-- Database Configuration -->
+
+<property>
+	<name>wmr.db.url</name>
+	<value>jdbc:h2:${wmr.home.dir}/db/submissions;INIT=RUNSCRIPT FROM '${wmr.home.dir}/db/setup.sql'</value>
+	<description>
+	A JDBC connection URL for the submission database maintained by WebMapReduce.
+	With the default value, the database is created automatically on first run and
+	its schema set by the SQL contained in the file ${wmr.home.dir}/db/setup.sql.
+	</description>
+</property>
+
+<property>
+	<name>wmr.db.user</name>
+	<value>wmrserver</value>
+	<description>
+	The username to pass when connecting to the submission database. With the
+	default value of the property wmr.db.url, this user is created automatically
+	and given complete privileges on first run. 
+	</description>
+</property>
+
+<property>
+	<name>wmr.db.password</name>
+	<value>2lsLRc7MjIswJa3Kz9hC</value>
+	<description>
+	The password to pass when connecting to the submission database. With the
+	default value of the property wmr.db.url, this password is set for the user
+	specified by wmr.db.user automatically on first run.
+	</description>
+</property>
+
+<!-- ========================== Server Configuration ====================== -->
+
+<property>
+	<name>wmr.server.bind.host</name>
+	<value>localhost</value>
+	<description>The hostname for the embedded server to bind to.</description>
+</property>
+
+<property>
+	<name>wmr.server.bind.port</name>
+	<value>50100</value>
+	<description>The port for the embedded server to bind to.</description>
+</property>
+
+<!-- Server HTTP Authentication Configuration -->
+
+<property>
+	<name>wmr.server.httpauth.enable</name>
+	<value>false</value>
+	<description>
+	A boolean value indicating whether the server should use HTTP authentication.
+	If set to true, the authentication realm must be populated with accounts from
+	a properties file specified by wmr.server.httpauth.accounts.
+	</description>
+</property>
+
+<property>
+	<name>wmr.server.httpauth.accounts</name>
+	<value>${wmr.home.dir}/conf/accounts.properties</value>
+	<description>
+	The path on the local filesystem to a properties file listing accounts and
+	their associated passwords and roles to use in HTTP authentication.
+	</description>
+</property>
+
+<!-- Server SSL Configuration -->
+
+<property>
+	<name>wmr.server.ssl.enable</name>
+	<value>false</value>
+	<description>
+	A boolean value indicating whether the server should use an SSL/HTTPS (true)
+	or unencrypted HTTP connector. If set to true, a keystore file must be
+	provided through the property wmr.server.ssl.keystore.
+	</description>
+</property>
+
+<property>
+	<name>wmr.server.ssl.keystore</name>
+	<value>${wmr.home.dir}/conf/keystore.jks</value>
+	<description>
+	The resource path (i.e., a path on the classpath) to the keystore containing
+	the certificate for the server along with its associated key and certificate
+	chain. Only meaningful if SSL is enabled.
+	</description>
+</property>
+
+<property>
+	<name>wmr.server.ssl.keystore.password</name>
+	<value></value>
+	<description>
+	The password to unlock the keystore, or empty if no password is required. Only
+	meaningful if SSL is enabled.
+	</description>
+</property>
+
+<property>
+	<name>wmr.server.ssl.keystore.keypassword</name>
+	<value></value>
+	<description>
+	The password to unlock the private key in the keystore, or empty if no
+	password is required. Only meaningful if SSL is enabled.
+	</description>
+</property>
+
+<property>
+	<name>wmr.server.ssl.keystore.type</name>
+	<value>JKS</value>
+	<description>
+	The format of the keystore. Only meaningful if SSL is enabled and
+	wmr.server.ssl.keystore.location is set.
+	</description>
+</property>
+
+<property>
+	<name>wmr.server.ssl.needclient</name>
+	<value>false</value>
+	<description>
+	A boolean value indicating whether to perform SSL client authentication. Only
+	meaningful if SSL is enabled. If set to true, a truststore file must be
+	provided through the property wmr.server.ssl.truststore.
+	</description>
+</property>
+
+<property>
+	<name>wmr.server.ssl.truststore</name>
+	<value>${wmr.server.ssl.keystore}</value>
+	<description>
+	The resource path (i.e., a path on the classpath) to the truststore to
+	validate client certificates against. Only meaningful if SSL client
+	authentication is enabled.
+	</description>
+</property>
+
+<property>
+	<name>wmr.server.ssl.truststore.password</name>
+	<value>${wmr.server.ssl.keystore.password}</value>
+	<description>
+	The password to unlock the truststore, or empty if no password is required.
+	Only meaningful if SSL client authentication is enabled.
+	</description>
+</property>
+
+<property>
+	<name>wmr.server.ssl.truststore.type</name>
+	<value>${wmr.server.ssl.keystore.type}</value>
+	<description>
+	The format of the truststore. Only meaningful if SSL client authentication is
+	enabled.
+	</description>
+</property>
+
+</configuration>
