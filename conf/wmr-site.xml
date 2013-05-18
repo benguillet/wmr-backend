@@ -9,4 +9,5 @@
     <property>
         <name>wmr.server.bind.port</name>
         <value>50100</value>
+    </property>
 </configuration>
