@@ -10,4 +10,8 @@
         <name>wmr.server.bind.port</name>
         <value>50100</value>
     </property>
+    <property>
+        <name>wmr.home.dir</name>
+        <value>/Users/tartopom/Dropbox/Projects/stolaf/pdc/WMR-backend-2.0</value>
+    </property>
 </configuration>
