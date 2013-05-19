@@ -10,6 +10,13 @@
 <!-- ======================= Web Service Configuration ==================== -->
 
 <property>
+	<name>wmr.home.dir</name>
+    <value>/Users/tartopom/Dropbox/Projects/stolaf/pdc/WMR-backend-2.0</value>
+	<description>
+	</description>
+</property>
+
+<property>
 	<name>wmr.dfs.home</name>
 	<value></value>
 	<description>

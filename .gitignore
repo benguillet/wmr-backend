@@ -1,1 +1,4 @@
+*.h2.db
+*.lock.db
+*.db
 .DS_Store
