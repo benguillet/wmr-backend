@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var Wmr = require('./wmr/common.js');
+var Wmr = require('../wmr/common.js');
 
 function mapper(key, value) {
     var words = key.split(' ');
@@ -35,10 +35,9 @@ function mapper(key, value) {
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var stdin  = process.stdin;
+var stdin = process.stdin;
 var stdout = process.stdout;
-
-var data = '';
+var data   = '';
 stdin.setEncoding('utf8');
 stdin.resume();
 

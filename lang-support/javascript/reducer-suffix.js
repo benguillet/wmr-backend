@@ -13,8 +13,7 @@
 
 var stdin = process.stdin;
 var stdout = process.stdout;
-
-var data = '';
+var data   = '';
 var info = {};
 stdin.setEncoding('utf8');
 stdin.resume();

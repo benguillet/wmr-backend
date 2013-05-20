@@ -11,10 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var stdin  = process.stdin;
+var stdin = process.stdin;
 var stdout = process.stdout;
-
-var data = '';
+var data   = '';
 stdin.setEncoding('utf8');
 stdin.resume();
 
