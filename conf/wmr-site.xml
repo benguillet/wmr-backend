@@ -14,4 +14,12 @@
         <name>wmr.home.dir</name>
         <value>/Users/tartopom/Dropbox/Projects/stolaf/pdc/WMR-backend-2.0</value>
     </property>
+    <property>
+        <name>wmr.tests.allow</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>wmr.tests.su.cmd</name>
+        <value>${cmd}</value>
+    </property>
 </configuration>

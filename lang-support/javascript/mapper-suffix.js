@@ -40,7 +40,6 @@ stdin.on('data', function(chunk) {
 stdin.on('end', function() {
    if (data) {
         var partition = Wmr.parseInput(data);
-        console.log('bite');
         if (partition.length === 2) {
             mapper(partition[0], partition[1]);
         } else if (partition.length === 1) {
